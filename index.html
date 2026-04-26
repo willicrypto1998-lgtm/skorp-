@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKORP — The Black Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     SKORP — THE BLACK BOOK
+     Concept: An underground noir leather book.
+     Aesthetic: Streetwear couture meets Algerian rap mythology.
+     ========================================================= */
+
+  :root {
+    --ink:        #0a0a0a;
+    --ink-2:      #141414;
+    --ink-3:      #1c1c1c;
+    --paper:      #d8d4cb;
+    --paper-2:    #c9c3b6;
+    --paper-fold: #a89e8a;
+    --paper-edge: #6b6256;
+    --accent:     #b8935a;       /* aged gold */
+    --accent-2:   #8a6a3e;
+    --blood:      #6b1414;
+    --shadow:     rgba(0,0,0,0.85);
+    --grit:       rgba(0,0,0,0.18);
+
+    --font-display: "Bebas Neue", sans-serif;
+    --font-arabic:  "Reem Kufi", "Amiri", serif;
+    --font-arabic-classic: "Amiri", serif;
+    --font-body:    "Cormorant Garamond", serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0a0a0a;
+    color: var(--paper);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* =========================================================
+     STAGE — the desk where the book sits
+     ========================================================= */
+  .stage {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 55%, #2a2a2a 0%, #141414 35%, #050505 75%, #000 100%),
+      #000;
+    perspective: 2400px;
+    perspective-origin: 50% 40%;
+    overflow: hidden;
+  }
+
+  /* atmospheric grain */
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(184,147,90,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(184,147,90,0.03) 0%, transparent 45%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+    opacity: 0.18;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* dust motes */
+  .dust {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: rgba(184,147,90,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 12s linear infinite;
+  }
+  @keyframes float {
+    0% { transform: translateY(110vh) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) translateX(40px); opacity: 0; }
+  }
+
+  /* =========================================================
+     BOOK
+     ========================================================= */
+  .book-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(92vw, 1100px);
+    height: min(82vh, 720px);
+    z-index: 10;
+  }
+
+  .book {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: rotateX(2deg);
+  }
+
+  /* book shadow on the desk */
+  .book::before {
+    content: "";
+    position: absolute;
+    bottom: -40px;
+    left: 5%;
+    right: 5%;
+    height: 60px;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 35%, transparent 70%);
+    filter: blur(20px);
+    z-index: -1;
+  }
+
+  /* spine - the binding between pages */
+  .spine {
+    position: absolute;
+    top: -8px;
+    bottom: -8px;
+    left: 50%;
+    width: 14px;
+    transform: translateX(-50%);
+    background:
+      linear-gradient(90deg,
+        #000 0%,
+        #1a1a1a 20%,
+        #050505 50%,
+        #1a1a1a 80%,
+        #000 100%);
+    box-shadow:
+      inset 0 0 8px rgba(0,0,0,0.95),
+      0 0 20px rgba(0,0,0,0.6);
+    z-index: 25;
+  }
+
+  /* =========================================================
+     PAGES — the two visible halves of the book
+     ========================================================= */
+  .page-pair {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+  }
+
+  .page {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    background:
+      /* paper edges (torn look done with mask later) */
+      linear-gradient(180deg, #ddd6c7 0%, #cfc8b6 50%, #c2bba8 100%);
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 60px rgba(60, 45, 20, 0.35),
+      inset 0 0 8px rgba(0,0,0,0.4);
+  }
+
+  /* paper texture */
+  .page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.3  0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23p)' opacity='0.4'/></svg>"),
+      radial-gradient(ellipse at 30% 20%, rgba(140,100,40,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 80%, rgba(60,40,20,0.18) 0%, transparent 55%);
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* coffee stains and aging spots */
+  .page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 15% 85%, rgba(80,50,15,0.18) 0%, transparent 8%),
+      radial-gradient(circle at 88% 12%, rgba(80,50,15,0.14) 0%, transparent 6%),
+      radial-gradient(circle at 45% 65%, rgba(80,50,15,0.08) 0%, transparent 5%);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* LEFT page — torn on the right (toward spine) */
+  .page-left {
+    border-right: 1px solid rgba(0,0,0,0.3);
+    transform-origin: right center;
+  }
+  .page-left .torn-edge {
+    position: absolute;
+    top: 0; bottom: 0;
+    right: -1px;
+    width: 12px;
+    z-index: 4;
+    background:
+      linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.4) 100%);
+  }
+
+  /* RIGHT page — torn on the left (toward spine) */
+  .page-right {
+    border-left: 1px solid rgba(0,0,0,0.3);
+    transform-origin: left center;
+  }
+  .page-right .torn-edge {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -1px;
+    width: 12px;
+    z-index: 4;
+    background:
+      linear-gradient(270deg, transparent 0%, rgba(0,0,0,0.4) 100%);
+  }
+
+  /* spine shadow falling onto each page */
+  .page-left::after, .page-right::after { /* extends the existing pseudo */ }
+
+  .page-inner-shadow-left {
+    position: absolute;
+    top: 0; bottom: 0;
+    right: 0;
+    width: 80px;
+    background: linear-gradient(270deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .page-inner-shadow-right {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0;
+    width: 80px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  /* =========================================================
+     TORN PAPER OUTER EDGES (top, bottom, outer sides)
+     using clip-path for an organic ripped look
+     ========================================================= */
+  .page-left {
+    clip-path: polygon(
+      0% 1%, 2% 0%, 5% 1.5%, 9% 0.5%, 14% 2%, 20% 0.8%, 26% 1.5%, 33% 0.3%,
+      40% 1.8%, 48% 0.5%, 55% 1.2%, 63% 0.4%, 72% 1.6%, 81% 0.7%, 90% 1.4%, 96% 0.6%, 100% 1.2%,
+      100% 99%,
+      96% 99.4%, 90% 98.6%, 81% 99.3%, 72% 98.4%, 63% 99.6%, 55% 98.8%, 48% 99.5%,
+      40% 98.2%, 33% 99.7%, 26% 98.5%, 20% 99.2%, 14% 98%, 9% 99.5%, 5% 98.5%, 2% 100%, 0% 99%
+    );
+  }
+  .page-right {
+    clip-path: polygon(
+      0% 1.2%, 4% 0.6%, 10% 1.4%, 19% 0.7%, 28% 1.6%, 37% 0.4%, 45% 1.2%, 52% 0.5%,
+      60% 1.8%, 67% 0.3%, 74% 1.5%, 80% 0.8%, 86% 2%, 91% 0.5%, 95% 1.5%, 98% 0%, 100% 1%,
+      100% 99%,
+      98% 100%, 95% 98.5%, 91% 99.5%, 86% 98%, 80% 99.2%, 74% 98.5%, 67% 99.7%,
+      60% 98.2%, 52% 99.5%, 45% 98.8%, 37% 99.6%, 28% 98.4%, 19% 99.3%, 10% 98.6%, 4% 99.4%, 0% 99%
+    );
+  }
+
+  /* =========================================================
+     PAGE CONTENT
+     ========================================================= */
+  .page-content {
+    position: absolute;
+    inset: 0;
+    padding: 60px 70px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+  }
+
+  .page-number {
+    position: absolute;
+    bottom: 28px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    color: rgba(60, 40, 20, 0.55);
+    z-index: 11;
+  }
+  .page-left .page-number { left: 70px; }
+  .page-right .page-number { right: 70px; }
+
+  /* scattered arabic words - track-related */
+  .scattered-word {
+    position: absolute;
+    font-family: var(--font-arabic-classic);
+    color: rgba(60, 35, 15, 0.42);
+    font-style: italic;
+    pointer-events: none;
+    user-select: none;
+    z-index: 6;
+    transform: rotate(var(--rot, -3deg));
+    font-weight: 400;
+  }
+
+  /* =========================================================
+     PAGE 1 — COVER (logo)
+     ========================================================= */
+  .cover {
+    background:
+      radial-gradient(ellipse at 30% 30%, #1a1a1a 0%, #0a0a0a 60%, #000 100%) !important;
+    color: var(--paper);
+  }
+  .cover::before {
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.7  0 0 0 0 0.55  0 0 0 0 0.3  0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>") !important;
+    mix-blend-mode: screen !important;
+    opacity: 0.55 !important;
+  }
+  .cover::after {
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(184,147,90,0.12) 0%, transparent 50%) !important;
+  }
+
+  .cover-frame {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(184,147,90,0.18);
+    margin: 12px;
+    padding: 28px;
+    position: relative;
+    z-index: 8;
+  }
+  .cover-frame::before, .cover-frame::after {
+    content: "";
+    position: absolute;
+    width: 24px; height: 24px;
+    border-color: var(--accent);
+  }
+  .cover-frame::before {
+    top: -1px; left: -1px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+  }
+  .cover-frame::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+  }
+
+  .cover-eyebrow {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.55em;
+    color: var(--accent);
+    margin-bottom: 14px;
+    opacity: 0.85;
+  }
+
+  .cover-logo {
+    width: 220px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 18px 0;
+    position: relative;
+  }
+  .cover-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: invert(1) brightness(1.1) drop-shadow(0 0 20px rgba(184,147,90,0.4));
+  }
+
+  .cover-title {
+    font-family: var(--font-display);
+    font-size: clamp(56px, 9vw, 96px);
+    letter-spacing: 0.18em;
+    color: var(--paper);
+    margin-top: 8px;
+    line-height: 1;
+    text-shadow: 0 2px 30px rgba(184,147,90,0.25);
+  }
+
+  .cover-arabic {
+    font-family: var(--font-arabic);
+    font-size: 28px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .cover-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 22px auto;
+  }
+
+  .cover-tagline {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-style: italic;
+    color: rgba(216, 212, 203, 0.7);
+    letter-spacing: 0.12em;
+    text-align: center;
+    max-width: 280px;
+  }
+
+  .cover-collection {
+    position: absolute;
+    bottom: 30px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: rgba(184,147,90,0.6);
+  }
+
+  /* =========================================================
+     PAGE 2 — TABLE OF CONTENTS / OPENING
+     ========================================================= */
+  .toc-page-content {
+    padding: 70px 80px 70px 70px;
+  }
+
+  .chapter-mark {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    color: var(--accent-2);
+    margin-bottom: 8px;
+  }
+  .chapter-title-ar {
+    font-family: var(--font-arabic);
+    font-size: 64px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+    direction: rtl;
+    font-weight: 600;
+  }
+  .chapter-title-fr {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 18px;
+    color: rgba(40, 25, 10, 0.7);
+    margin-bottom: 26px;
+  }
+
+  .ornate-rule {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .ornate-rule .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(60,40,15,0.4), transparent);
+  }
+  .ornate-rule .diamond {
+    width: 6px; height: 6px;
+    background: var(--ink);
+    transform: rotate(45deg);
+  }
+
+  .toc-list {
+    list-style: none;
+    margin-top: 6px;
+  }
+  .toc-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(60,40,15,0.25);
+    font-family: var(--font-body);
+    color: var(--ink);
+  }
+  .toc-list .toc-num {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--accent-2);
+    letter-spacing: 0.2em;
+    min-width: 28px;
+  }
+  .toc-list .toc-name {
+    font-size: 19px;
+    font-weight: 500;
+    flex: 1;
+  }
+  .toc-list .toc-ar {
+    font-family: var(--font-arabic);
+    font-size: 18px;
+    color: rgba(40,25,10,0.65);
+    direction: rtl;
+  }
+
+  /* =========================================================
+     PAGE 3 — INTRO / المقدمة
+     ========================================================= */
+  .intro-page {
+    padding: 70px 80px 70px 70px;
+  }
+
+  .intro-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .intro-mark {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.45em;
+    color: var(--accent-2);
+  }
+  .intro-num {
+    font-family: var(--font-display);
+    font-size: 60px;
+    color: rgba(40,25,10,0.15);
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+
+  .intro-title-ar {
+    font-family: var(--font-arabic);
+    font-size: 78px;
+    color: var(--ink);
+    line-height: 0.95;
+    direction: rtl;
+    text-align: right;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .intro-title-fr {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 18px;
+    color: rgba(40,25,10,0.65);
+    text-align: right;
+    margin-bottom: 30px;
+  }
+
+  .intro-body {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.8;
+    color: rgba(20, 12, 5, 0.88);
+    column-count: 1;
+  }
+  .intro-body p { margin-bottom: 16px; }
+  .intro-body .dropcap {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 76px;
+    line-height: 0.85;
+    padding: 6px 12px 0 0;
+    color: var(--ink);
+  }
+  .intro-body .dropcap-ar {
+    float: right;
+    font-family: var(--font-arabic);
+    font-size: 80px;
+    line-height: 0.85;
+    padding: 4px 0 0 14px;
+    color: var(--ink);
+  }
+  .intro-body .ar {
+    direction: rtl;
+    text-align: right;
+    font-family: var(--font-arabic-classic);
+    font-size: 19px;
+    line-height: 2;
+  }
+
+  .intro-signature {
+    margin-top: 22px;
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 16px;
+    color: rgba(40,25,10,0.7);
+    text-align: right;
+  }
+  .intro-signature .name {
+    display: block;
+    font-family: var(--font-display);
+    font-style: normal;
+    font-size: 22px;
+    letter-spacing: 0.3em;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+
+  /* =========================================================
+     PAGES 4-5 — PRODUCTS
+     ========================================================= */
+  .products-page {
+    padding: 60px 60px 70px 60px;
+  }
+
+  .products-header {
+    margin-bottom: 24px;
+  }
+  .products-eyebrow {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.5em;
+    color: var(--accent-2);
+    margin-bottom: 4px;
+  }
+  .products-title {
+    font-family: var(--font-display);
+    font-size: 38px;
+    color: var(--ink);
+    letter-spacing: 0.15em;
+    line-height: 1;
+  }
+  .products-title-ar {
+    font-family: var(--font-arabic);
+    font-size: 28px;
+    color: rgba(40,25,10,0.7);
+    direction: rtl;
+    text-align: right;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    flex: 1;
+    margin-top: 10px;
+  }
+
+  .product-card {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(60,40,15,0.18);
+    padding: 14px 14px 18px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+  }
+  .product-card:hover {
+    transform: translateY(-4px) rotate(-0.5deg);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  }
+  .product-card::before {
+    content: "";
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 18px; height: 18px;
+    background: var(--ink);
+    transform: rotate(45deg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .product-card::after {
+    content: "";
+    position: absolute;
+    top: 1px; right: 1px;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    z-index: 2;
+  }
+
+  .product-image {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-image svg {
+    width: 70%;
+    height: 70%;
+  }
+  .product-image .label-stamp {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-family: var(--font-display);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 2px 6px;
+    transform: rotate(-4deg);
+    opacity: 0.85;
+  }
+
+  .product-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--ink);
+    letter-spacing: 0.12em;
+    margin-bottom: 2px;
+  }
+  .product-name-ar {
+    font-family: var(--font-arabic);
+    font-size: 14px;
+    color: rgba(40,25,10,0.6);
+    direction: rtl;
+    text-align: right;
+    margin-bottom: 8px;
+  }
+  .product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(60,40,15,0.25);
+  }
+  .product-price {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--ink);
+    letter-spacing: 0.1em;
+  }
+  .product-price .currency {
+    font-size: 11px;
+    color: var(--accent-2);
+    margin-left: 4px;
+    letter-spacing: 0.3em;
+  }
+  .product-add {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--accent-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-2);
+    padding-bottom: 1px;
+  }
+
+  /* =========================================================
+     OUTRO PAGE
+     ========================================================= */
+  .outro-page {
+    padding: 80px 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .outro-quote {
+    font-family: var(--font-arabic-classic);
+    font-style: italic;
+    font-size: 30px;
+    line-height: 1.8;
+    color: var(--ink);
+    direction: rtl;
+    max-width: 380px;
+    margin-bottom: 24px;
+  }
+  .outro-quote-fr {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 17px;
+    color: rgba(40,25,10,0.65);
+    max-width: 320px;
+    margin-bottom: 32px;
+  }
+  .outro-divider {
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ink), transparent);
+    margin: 18px 0;
+  }
+  .outro-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 18px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: rgba(40,25,10,0.75);
+  }
+  .outro-contact a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(40,25,10,0.4);
+  }
+  .outro-mark {
+    margin-top: 30px;
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.6em;
+    color: var(--accent-2);
+  }
+
+  /* =========================================================
+     TURN PAGE BUTTON
+     ========================================================= */
+  .turn-page {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 28px;
+    background: rgba(10,10,10,0.85);
+    border: 1px solid rgba(184,147,90,0.4);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  .turn-page:hover {
+    background: rgba(184,147,90,0.15);
+    border-color: var(--accent);
+    transform: translateX(-50%) translateY(-2px);
+  }
+  .turn-page:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: translateX(-50%);
+  }
+  .turn-page .label-fr {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    color: var(--paper);
+  }
+  .turn-page .label-ar {
+    font-family: var(--font-arabic);
+    font-size: 16px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .turn-page .arrow {
+    width: 22px;
+    height: 1px;
+    background: var(--accent);
+    position: relative;
+  }
+  .turn-page .arrow::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 8px; height: 8px;
+    border-top: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+    transform: rotate(45deg);
+  }
+
+  /* previous page (left side) */
+  .turn-prev {
+    left: calc(50% - 200px);
+  }
+  .turn-prev:hover { transform: translateX(-50%) translateY(-2px); }
+  .turn-prev .arrow {
+    transform: rotate(180deg);
+  }
+
+  /* =========================================================
+     PAGE FLIP ANIMATION
+     ========================================================= */
+  .flipping-page {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    z-index: 50;
+    pointer-events: none;
+    transition: transform 1.1s cubic-bezier(0.45, 0.05, 0.35, 1);
+  }
+  .flipping-page.flip-forward {
+    left: 50%;
+    transform-origin: left center;
+    animation: flipForward 1.1s cubic-bezier(0.45, 0.05, 0.35, 1) forwards;
+  }
+  .flipping-page.flip-backward {
+    left: 0%;
+    transform-origin: right center;
+    animation: flipBackward 1.1s cubic-bezier(0.45, 0.05, 0.35, 1) forwards;
+  }
+  @keyframes flipForward {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(-180deg); }
+  }
+  @keyframes flipBackward {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(180deg); }
+  }
+
+  .flip-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+  }
+  .flip-front {
+    transform: rotateY(0deg);
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+  }
+
+  /* =========================================================
+     INTRO ANIMATION — book opens
+     ========================================================= */
+  .book-opening .page-left {
+    animation: openLeft 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+    transform-origin: right center;
+  }
+  .book-opening .page-right {
+    animation: openRight 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+    transform-origin: left center;
+  }
+  @keyframes openLeft {
+    0% { transform: rotateY(170deg); }
+    100% { transform: rotateY(0deg); }
+  }
+  @keyframes openRight {
+    0% { transform: rotateY(-170deg); }
+    100% { transform: rotateY(0deg); }
+  }
+
+  /* fade in text content after open */
+  .page-content > * {
+    animation: contentFade 0.8s ease-out 1.6s both;
+  }
+  @keyframes contentFade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* =========================================================
+     LOADING SCREEN
+     ========================================================= */
+  .loader {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: opacity 0.6s ease;
+  }
+  .loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .loader-text {
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 0.6em;
+    color: var(--accent);
+    margin-bottom: 24px;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  .loader-bar {
+    width: 200px;
+    height: 1px;
+    background: rgba(184,147,90,0.2);
+    overflow: hidden;
+    position: relative;
+  }
+  .loader-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform-origin: left;
+    animation: load 1.8s ease-in-out forwards;
+  }
+  @keyframes load {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* =========================================================
+     CART INDICATOR
+     ========================================================= */
+  .cart-icon {
+    position: fixed;
+    top: 24px;
+    right: 28px;
+    z-index: 100;
+    background: rgba(10,10,10,0.85);
+    border: 1px solid rgba(184,147,90,0.4);
+    padding: 10px 18px;
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .cart-icon:hover {
+    border-color: var(--accent);
+    background: rgba(184,147,90,0.15);
+  }
+  .cart-icon .label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--paper);
+  }
+  .cart-icon .count {
+    background: var(--accent);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 11px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* page indicator */
+  .page-indicator {
+    position: fixed;
+    top: 24px;
+    left: 28px;
+    z-index: 100;
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: rgba(184,147,90,0.7);
+    background: rgba(10,10,10,0.6);
+    padding: 10px 16px;
+    border: 1px solid rgba(184,147,90,0.2);
+    backdrop-filter: blur(8px);
+  }
+
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
+  @media (max-width: 900px) {
+    .book-wrap { width: 96vw; height: 78vh; }
+    .page-content { padding: 30px 28px; }
+    .toc-page-content, .intro-page, .products-page { padding: 36px 28px; }
+    .cover-title { font-size: 48px; }
+    .cover-arabic { font-size: 22px; }
+    .cover-logo { width: 140px; height: 140px; }
+    .intro-title-ar { font-size: 52px; }
+    .chapter-title-ar { font-size: 44px; }
+    .intro-body { font-size: 14px; }
+    .product-grid { gap: 10px; }
+    .product-name { font-size: 14px; }
+    .products-title { font-size: 26px; }
+    .turn-prev { left: calc(50% - 130px); }
+    .turn-page { padding: 8px 14px; }
+    .turn-page .label-fr { font-size: 10px; letter-spacing: 0.25em; }
+    .turn-page .label-ar { font-size: 13px; }
+  }
+
+  @media (max-width: 640px) {
+    .book-wrap { width: 98vw; height: 80vh; }
+    .page-pair { flex-direction: column; }
+    .page { width: 100%; height: 50%; }
+    .page-left { clip-path: none; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.3); }
+    .page-right { clip-path: none; border-left: none; }
+    .spine { display: none; }
+    .product-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loader" id="loader">
+  <div class="loader-text">SKORP</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- TOP UI -->
+<div class="page-indicator" id="pageIndicator">SPREAD 01 / 04</div>
+<div class="cart-icon" id="cartIcon">
+  <span class="label">PANIER</span>
+  <span class="count" id="cartCount">0</span>
+</div>
+
+<!-- STAGE -->
+<div class="stage">
+  <!-- floating dust -->
+  <div class="dust" style="left:10%; animation-delay:0s;"></div>
+  <div class="dust" style="left:25%; animation-delay:3s;"></div>
+  <div class="dust" style="left:45%; animation-delay:6s;"></div>
+  <div class="dust" style="left:65%; animation-delay:2s;"></div>
+  <div class="dust" style="left:80%; animation-delay:8s;"></div>
+  <div class="dust" style="left:92%; animation-delay:4s;"></div>
+
+  <div class="book-wrap">
+    <div class="book book-opening" id="book">
+      <div class="spine"></div>
+      <div class="page-pair" id="pagePair">
+        <!-- Pages injected by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TURN BUTTONS -->
+<button class="turn-page turn-prev" id="prevBtn" disabled>
+  <span class="arrow"></span>
+  <span class="label-fr">PRÉCÉDENT</span>
+  <span class="label-ar">السابق</span>
+</button>
+
+<button class="turn-page" id="nextBtn">
+  <span class="label-ar">اقلب الصفحة</span>
+  <span class="label-fr">TURN THE PAGE</span>
+  <span class="arrow"></span>
+</button>
+
+<script>
+  // =========================================================
+  // SKORP BOOK ENGINE
+  // =========================================================
+
+  const LOGO_SRC = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoJCREMEREREREaExQTGhsbFxcbGx4ZGxsbGR4eIB8hIR8gHiAeIyQjHiAhIycnIyEkLCssJCsoKCswKzAqKiIBCQcHDwsPDg8PDhUOEQ4VFBMPDxMUFxESERIRFxkWFBUVFBYZFxUUERQVFxgVGRkVGBkTFhMZGBkZGCUoJSQk///CABEIBIAIAAMBEQACEQEDEQH/xACkAAEAAwEBAQAAAAAAAAAAAAAABAUGAwIBEAABAwMEAgICAQQDAQAAAAABAgMEBRESABATIDBwISIjM0MUMTJAwNDgQhEAAQEFBQYEBQMFAQAAAAAAAQIAECAxQSEwMlFwEWFxgaGxQlKRwRITIoLRQGLhA3KA0PCSEgEAAAMECwEBAQEBAQAAAAABESExAEFRYRAgcHGBkaGxwdHwMOHxQNCA/9oADAMBAAIAAwAAAAK5+fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAByOoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4OBKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIJxLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwx5eloAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADJHEvy0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMgcwaAswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADkZEA+mgLIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFYZ8AH01BKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//aAAwDAQACAAMAAAAhbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf/7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/8A/wBttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttv/wD/AG2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223//AP8Abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/wD/AP8A7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf/wD/AP8A7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/AP8A/wD7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf/wD/AP8Ab7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf/AP8A/wD7b7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf/AP8A/wD7b7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf8A/wD/AP8A2/3222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223/AP8A/wD/ANv/ALbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/8A/wD/APfb/wC+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223//AP8A/wD+3/8A9tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt//wD/AP8Attv/AP8A222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223/8A/wD/AP8Attv/AP8A22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222/wD/AP8A/wDtv99//wDbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbff/wD/AP8Afb77f/8A32222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222/wD/AP8A/wBt/wDbb/8A++222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223/wD/AP8A+23/APt//wD/AH2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222+//wD/AP8A22//AP8Abf8A/wD9tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt/wD/AP8A/ttv/wD7bf8A/wD/ALbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/wD/AP8A/wD+233/AP8A7ff/AP322222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223/8A/wD/AP8Avttt/wD/AH23/wD/AP7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/wD/AP8A/fbfbf8A/wDvtv8A/wD/ANtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt//AP8A/wDvtt/9/wD/AP8A9t//AP7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbff/wD/AP8Abbb/AP8Av/8A/wD22/8A/tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttvv8A/wD/APvttt//AL//AP8A9t9//wDbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf/AP8A/wD7bbb/AP22/wD/AP8A2/8A/wDbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb//AP8A/wDbbbb/AP8Atv8A/wD/ANtv/wDfbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/8A/wD/AP8A22223/8A9t//AP8A23//AP8Abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/8A/wD/APbbbbb/AP8A9tt//wD/AG//ANttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt//wD/AP8Atttttvv/AP8A23//AP8Abb/7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/8A/wD/ALb7/bbb/wD/ANtt/wD/AP3++222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223//AP8A7ff/AO3+2/8A/wD/AG3/AP8A7b/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/8A/wDv/wD/AP8A/ttv/wD7bb//AP232222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223//AP8A/wD/AP8A/wD/APtv/wD/AP3/AP8A/wC+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222//wD/AP8A/wD/AP8A22//AP8A777/AP32222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222233/wD/AP8A/wD/AP8A/wBvv/8A/ff/AP8Atttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttv8A/wD/AP8A/wD2+233/wD/APf/AO222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223/8A/wD/AP22+2+//wD/APbf7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb7/wD/APvtv/8A7/b/AP8A9t/ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt9/9vttv/8A7b7/AP8A/v8A7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf/bbb/8A/wD9vtv/AP8A+222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222//AP8A/wD2+/8A/ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt/wD/AP322/8A/vtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt/wD/AG3+23/+22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223/APtt/wDbf/7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/8A22//APtv/ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttv/wD7ff8A22+222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222/+2//APttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt9t//wD7b7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/f/wD/APt9ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt9//AP8A+322222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222/wD/AP8A2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223/wD/APbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbf/AP8A9tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttv/8A/wC222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222//AP8A/wC22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222+//AP8A7bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbff/8A+222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222/222222/8A/wDbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbfbbbff/AP8A/vtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttv8A7b//AP8A/wDbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbff/wD/AP8A/wC+2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222/8A/wD/AP8A9ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt9//wD/AO22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222/2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222//aAAgBAQABBwL/AKOA5LG3v9aAsWQ9grj9/wBRZzbvAn8n09/EX+FDEnUCfn9Pf0n9jm0CfyfT368brUdoE/k+nvt9eCFK6U+dy/X31VnsUY9EqxN4cnnRf3zUHuR09qa9g4B74myOFsnslWJBBv74qMnlX4Gf8E+96jJ4kW8CRYAe9XFhAKpD5eUVd4iM3UD3tU5eZ4/BSGrqUvbm/IG/eVRl8Qx8MFnibSNSHwygqpa83Vn3jJkBhOTjhcUVeCBH5XBvUZXKu1MXi8PeK1hAKpckvqv4YEbhRtUZXEjHTa8CFJVkAfd9Qm8xx8NMjcistLUEAmQ8XllW1KfyRh7uqU2/4/C00XFBLLQaSE6q7tglG8V/hWFA3921Gdj+PxU6JxJvtVv2jrSpOQ4/dc+dxDHxUyHl+TesJ+6T0bcLagph4PJCvdM6aGBZSio38MKLzq0Bb41LkYlDeqq1k3l1gS+FVvdEyWGBpaysk+FlkuqCWGQynHTrgbSVNvFbyV6WjMFLiMCU9aZMv+P3NLlBhN3XC4oq8KUlRtDihhO9Uk5qwBtpteaQrVWj/PJ1Bt8wpfOn3LJkBhN3nlOqy8VPhcQy2nSeFG9Kdybx042HElLzRaUU9WXi0oKYfDyQr3E++llOT76nlZeKnQcfybE2+ZcjnXfaC/wuDepReROXaHKLCtJUFC/uB55LScpMkvqv4qdBy/JvU14snrTpHKi21Sicas+1Om8Zw9vuOBsFUuUX1eOnweX79Kv+odYsjhWFJOQvpxsLBTJjllRT2ps3L8ft1SgkXmzC+fHBhcxuBb42WoJBLDnIkKqaMmVdqXL/AItp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AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/APv/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wDt/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP2//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/APf/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8Av/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A7bbf/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/bb/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP222/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AG223/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AG2223//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8Abbbbf/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A22223/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD7bbbf/f8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A22222+3/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/ANtttv8A7/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/APbbbbbfbb//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP222223/wBt/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP22222/+223/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wDtttttt/8Abb//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AH22222//wBttv8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/APvttttvv/tttt//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wBtttt99v8Abbbf/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/ANtttttv/wDf7bb/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A9ttttt//AL7fbbbff/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP7bbbbf/wC23/2222//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/bbbbbbf/wC22/8Attt//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP2222223/2233+2223/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8Afbbbbb//AO+223++222//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A+222223/AP8A/bbb/wD+222//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wBttttvv/8A/wC2223+222//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A+222233/AN9//ttv/wDbbbf/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/tttttv/AP8A23/2223/AP8Abbb/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A99tttt9//vtv9tttt/tttv8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wC222222/8A/ttv/wDbbb//AO223/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A9tttt/8A/wD/ANtt/wDbbbbf/bbf/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/fbbbbf/AP8A/wD7bb//AG22+++2+/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AO22222//wD/AP8A222++2222/8Atv8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/bbbbff/AP8A/wD/AG23/wD9ttt/9t//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD9tttv/wDb/wD/AP8Abbbb77bbb7bf/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A7bbbbffbf7f/AO223/8Attt/t/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A7bbbffbbbb//AH2223+22323/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD9ttttttttt/8A77bb7/7bb7//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A9tttttttttv/ALbbf/7bb/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP7bbbbbbbbf/fbbbf7bb7//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A99ttttttt/vvttttvtt//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD7bbbbf/ff7f8A223/ANvv/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wDfbbbf/wD22/8Avvttv9t//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AG2+/wD/ALbbf7/7bb7ff/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wBt9/8A/wC2223/AN9tt9v/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/ALbbb7/bbbf7/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/bbb77ff7bf/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8Att//AL//AP2//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD9ttv9t/8A/bf/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP22/wD/ALb/AP23/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD9tt/ttt//AL//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8Att9ttt//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP7f7bb/AO//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/ANvttt//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A+2223/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/ttttv8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD32222/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/ALbbbb//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A9ttt/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8Atttt/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AO2222//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A7/8A/wD/AP8A+22233//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/f8A/wD/AP77bbb/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A9/8A/wD22222/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP7fbbbbbbf/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/vttttttt/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AN9tttt//wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD77bbbf/8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wB/v9//AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/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";
+
+  // Product line — translate-ready
+  const PRODUCTS = [
+    { id:'sk01', name:'NOIR DRILL TEE', nameAr:'نوار دريل', price:4500, design:'drill' },
+    { id:'sk02', name:'الحقد ORACLE', nameAr:'هاجس الشارع', price:5200, design:'oracle' },
+    { id:'sk03', name:'BARAKA ZONE',   nameAr:'منطقة البركة', price:4800, design:'baraka' },
+    { id:'sk04', name:'KHELOTNI HEAVY', nameAr:'خلوطني', price:5500, design:'khelotni' },
+    { id:'sk05', name:'CITÉ MARTYR',    nameAr:'حي الشهداء', price:4900, design:'cite' },
+    { id:'sk06', name:'SUJUD STREET',   nameAr:'سجود',   price:5200, design:'sujud' },
+  ];
+
+  // Track-related arabic words to scatter on pages
+  const SCATTERED_WORDS = [
+    {w:'دموع', size:18}, {w:'صدق', size:22}, {w:'الشارع', size:16},
+    {w:'حلم', size:20}, {w:'ظلام', size:18}, {w:'وجع', size:24},
+    {w:'حرية', size:17}, {w:'ذكرى', size:19}, {w:'صبر', size:21},
+    {w:'خاوة', size:18}, {w:'عمر', size:20}, {w:'قلب', size:17}
+  ];
+
+  // SPREADS — each spread has a left page and right page
+  const SPREADS = [
+    // SPREAD 0 — Cover (left empty/dark) + Cover content (right)
+    { left: 'inside-cover', right: 'cover' },
+    // SPREAD 1 — TOC (left) + Intro (right)
+    { left: 'toc', right: 'intro' },
+    // SPREAD 2 — Products A (left) + Products B (right)
+    { left: 'products-a', right: 'products-b' },
+    // SPREAD 3 — Outro (left) + back (right)
+    { left: 'outro', right: 'back-cover' }
+  ];
+
+  let currentSpread = 0;
+  let cart = [];
+  let isFlipping = false;
+
+  // ---------- PAGE BUILDERS ----------
+
+  function scatteredWordsHTML(side, count = 4) {
+    let html = '';
+    const seed = side === 'left' ? 0 : 6;
+    for (let i = 0; i < count; i++) {
+      const w = SCATTERED_WORDS[(i + seed) % SCATTERED_WORDS.length];
+      const top = 8 + Math.floor((i * 23 + seed * 5) % 80);
+      const horiz = side === 'left'
+        ? 5 + ((i * 17) % 70)
+        : 8 + ((i * 19 + 5) % 75);
+      const horizProp = side === 'left' ? 'left' : 'right';
+      const rot = ((i * 37 + seed) % 14) - 7;
+      html += `<span class="scattered-word" style="top:${top}%; ${horizProp}:${horiz}%; font-size:${w.size}px; --rot:${rot}deg;">${w.w}</span>`;
+    }
+    return html;
+  }
+
+  function tshirtSVG(design) {
+    const designs = {
+      drill: `<g><text x="50" y="55" text-anchor="middle" font-family="Bebas Neue" font-size="14" fill="#b8935a" letter-spacing="2">SKORP</text><text x="50" y="68" text-anchor="middle" font-family="Reem Kufi" font-size="9" fill="#b8935a">سكورب</text></g>`,
+      oracle: `<g><circle cx="50" cy="50" r="18" fill="none" stroke="#b8935a" stroke-width="0.8"/><text x="50" y="54" text-anchor="middle" font-family="Reem Kufi" font-size="14" fill="#b8935a">ع</text></g>`,
+      baraka: `<g><text x="50" y="48" text-anchor="middle" font-family="Reem Kufi" font-size="11" fill="#b8935a">بركة</text><line x1="35" y1="55" x2="65" y2="55" stroke="#b8935a" stroke-width="0.5"/><text x="50" y="65" text-anchor="middle" font-family="Bebas Neue" font-size="7" fill="#b8935a" letter-spacing="1">BARAKA</text></g>`,
+      khelotni: `<g><text x="50" y="50" text-anchor="middle" font-family="Reem Kufi" font-size="13" fill="#b8935a">خلوطني</text><text x="50" y="62" text-anchor="middle" font-family="Bebas Neue" font-size="6" fill="#b8935a" letter-spacing="3">HEAVY</text></g>`,
+      cite: `<g><text x="50" y="52" text-anchor="middle" font-family="Bebas Neue" font-size="9" fill="#b8935a" letter-spacing="2">CITÉ</text><text x="50" y="62" text-anchor="middle" font-family="Reem Kufi" font-size="8" fill="#b8935a">شهداء</text></g>`,
+      sujud: `<g><text x="50" y="55" text-anchor="middle" font-family="Reem Kufi" font-size="14" fill="#b8935a">سجود</text></g>`
+    };
+    return `
+      <svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 25 15 L 35 8 L 40 12 Q 50 20 60 12 L 65 8 L 75 15 L 82 25 L 75 32 L 70 28 L 70 95 L 30 95 L 30 28 L 25 32 L 18 25 Z"
+              fill="#1a1a1a" stroke="#333" stroke-width="0.4"/>
+        ${designs[design] || designs.drill}
+      </svg>
+    `;
+  }
+
+  function buildCover() {
+    return `
+      <div class="page-content cover">
+        <div class="cover-frame">
+          <div class="cover-eyebrow">COLLECTION 001</div>
+          <div class="cover-logo"><img src="${LOGO_SRC}" alt="Skorp"></div>
+          <div class="cover-title">SKORP</div>
+          <div class="cover-arabic">سكورب</div>
+          <div class="cover-divider"></div>
+          <div class="cover-tagline">— The Black Book —<br>A capsule born from the streets of Algiers</div>
+        </div>
+        <div class="cover-collection">EST. ALGER · 2026</div>
+        <div class="page-number">— I —</div>
+      </div>
+    `;
+  }
+
+  function buildInsideCover() {
+    return `
+      <div class="page-content" style="background: linear-gradient(135deg, #0d0d0d 0%, #050505 100%); align-items:center; justify-content:center;">
+        <div style="opacity:0.5; text-align:center;">
+          <div style="font-family:var(--font-display); font-size:11px; letter-spacing:0.5em; color:var(--accent); margin-bottom:14px;">EX LIBRIS</div>
+          <div style="width:80px; height:1px; background:var(--accent); margin:14px auto; opacity:0.5;"></div>
+          <div style="font-family:var(--font-arabic-classic); font-style:italic; font-size:18px; color:var(--paper); opacity:0.6;">من قال أن الأسود لون الحداد ؟</div>
+          <div style="font-family:var(--font-body); font-style:italic; font-size:13px; color:var(--paper); opacity:0.5; margin-top:8px;">— qui a dit que le noir était la couleur du deuil ?</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function buildTOC() {
+    return `
+      <div class="page-content toc-page-content">
+        ${scatteredWordsHTML('left', 4)}
+        <div class="chapter-mark">— TABLE — الفهرس</div>
+        <div class="chapter-title-ar">المحتوى</div>
+        <div class="chapter-title-fr">Sommaire</div>
+        <div class="ornate-rule"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+        <ul class="toc-list">
+          <li>
+            <span class="toc-num">I.</span>
+            <span class="toc-name">Cover</span>
+            <span class="toc-ar">الغلاف</span>
+          </li>
+          <li>
+            <span class="toc-num">II.</span>
+            <span class="toc-name">Introduction</span>
+            <span class="toc-ar">المقدمة</span>
+          </li>
+          <li>
+            <span class="toc-num">III.</span>
+            <span class="toc-name">La Collection</span>
+            <span class="toc-ar">المجموعة</span>
+          </li>
+          <li>
+            <span class="toc-num">IV.</span>
+            <span class="toc-name">Manifeste</span>
+            <span class="toc-ar">البيان</span>
+          </li>
+        </ul>
+        <div style="margin-top:auto; padding-top:30px; font-family:var(--font-body); font-style:italic; font-size:13px; color:rgba(40,25,10,0.5); text-align:center;">
+          « Chaque page, un track. Chaque pièce, une histoire. »
+        </div>
+        <div class="page-number">— II —</div>
+      </div>
+    `;
+  }
+
+  function buildIntro() {
+    return `
+      <div class="page-content intro-page">
+        ${scatteredWordsHTML('right', 3)}
+        <div class="intro-header">
+          <div class="intro-mark">CHAPITRE — II</div>
+          <div class="intro-num">02</div>
+        </div>
+        <div class="intro-title-ar">المقدمة</div>
+        <div class="intro-title-fr">Introduction</div>
+
+        <div class="intro-body">
+          <p class="ar"><span class="dropcap-ar">م</span>ن قلب الجزائر، من أزقّة الحومة، من ضجيج التراموي وصمت الليل، وُلدت هذه المجموعة. كل قطعة هنا ليست مجرد تيشورت — إنها صوت، إنها حكاية، إنها صفحة من كتاب أسود لم يُكتب بالحبر، بل بالعرق والصدق.</p>
+          <p style="margin-top:14px;"><span class="dropcap">N</span>ée dans les rues d'Alger, cette collection raconte ce que les paroles n'ont pas pu dire. Six pièces, six tracks, six états d'âme. Du coton brut, des typographies tranchantes, et l'arabe comme signature.</p>
+          <p style="font-style:italic; color:rgba(40,25,10,0.65); margin-top:14px;">Tourne la page — la suite t'attend.</p>
+        </div>
+
+        <div class="intro-signature">
+          — sincèrement,
+          <span class="name">SKORP</span>
+        </div>
+        <div class="page-number">— III —</div>
+      </div>
+    `;
+  }
+
+  function buildProductsA() {
+    return `
+      <div class="page-content products-page">
+        ${scatteredWordsHTML('left', 2)}
+        <div class="products-header">
+          <div class="products-eyebrow">CHAPITRE — III</div>
+          <div class="products-title">LA COLLECTION</div>
+          <div class="products-title-ar">المجموعة</div>
+        </div>
+        <div class="product-grid">
+          ${PRODUCTS.slice(0,2).map(productCardHTML).join('')}
+          ${PRODUCTS.slice(4,6).map(productCardHTML).join('')}
+        </div>
+        <div class="page-number">— IV —</div>
+      </div>
+    `;
+  }
+
+  function buildProductsB() {
+    return `
+      <div class="page-content products-page">
+        ${scatteredWordsHTML('right', 2)}
+        <div class="products-header">
+          <div class="products-eyebrow">— SUITE —</div>
+          <div class="products-title">CAPSULE 001</div>
+          <div class="products-title-ar">الجزء الأول</div>
+        </div>
+        <div class="product-grid">
+          ${PRODUCTS.slice(2,4).map(productCardHTML).join('')}
+          <div style="grid-column: 1/-1; padding:18px; border:1px dashed rgba(60,40,15,0.35); text-align:center; font-family:var(--font-body); font-style:italic; color:rgba(40,25,10,0.7); font-size:14px;">
+            <div style="font-family:var(--font-display); font-size:12px; letter-spacing:0.4em; color:var(--accent-2); margin-bottom:6px;">— LIVRAISON —</div>
+            Toute la wilaya · Paiement à la livraison<br>
+            <span style="font-family:var(--font-arabic); font-size:13px;">الدفع عند الاستلام</span>
+          </div>
+        </div>
+        <div class="page-number">— V —</div>
+      </div>
+    `;
+  }
+
+  function productCardHTML(p) {
+    return `
+      <div class="product-card" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}">
+        <div class="product-image">
+          ${tshirtSVG(p.design)}
+          <span class="label-stamp">SKORP · 001</span>
+        </div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-name-ar">${p.nameAr}</div>
+        <div class="product-meta">
+          <div class="product-price">${p.price.toLocaleString()} <span class="currency">DA</span></div>
+          <a href="#" class="product-add" onclick="addToCart(event, '${p.id}')">+ ajouter</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function buildOutro() {
+    return `
+      <div class="page-content outro-page">
+        ${scatteredWordsHTML('left', 3)}
+        <div style="font-family:var(--font-display); font-size:11px; letter-spacing:0.5em; color:var(--accent-2); margin-bottom:18px;">— MANIFESTE —</div>
+        <div class="outro-quote">« الكتاب الأسود ما يتقراش بالعين, يتقرى بالقلب »</div>
+        <div class="outro-quote-fr">« Ce livre ne se lit pas avec les yeux, il se lit avec le cœur »</div>
+        <div class="outro-divider"></div>
+        <div class="outro-contact">
+          <div>Alger · Algérie</div>
+          <a href="https://instagram.com/skorp" target="_blank">@skorp</a>
+          <a href="mailto:contact@skorp.dz">contact@skorp.dz</a>
+        </div>
+        <div class="outro-mark">FIN — النهاية</div>
+        <div class="page-number">— VI —</div>
+      </div>
+    `;
+  }
+
+  function buildBackCover() {
+    return `
+      <div class="page-content" style="background: linear-gradient(135deg, #0d0d0d 0%, #050505 100%); align-items:center; justify-content:center; color:var(--paper);">
+        <div style="text-align:center; opacity:0.85;">
+          <div style="width:60px; height:60px; margin:0 auto 22px; opacity:0.7;">
+            <img src="${LOGO_SRC}" style="width:100%; height:100%; object-fit:contain; filter:invert(1) brightness(1.1);">
+          </div>
+          <div style="font-family:var(--font-display); font-size:24px; letter-spacing:0.4em; color:var(--paper);">SKORP</div>
+          <div style="font-family:var(--font-arabic); font-size:18px; color:var(--accent); margin-top:6px;">سكورب</div>
+          <div style="width:40px; height:1px; background:var(--accent); margin:18px auto; opacity:0.5;"></div>
+          <div style="font-family:var(--font-body); font-style:italic; font-size:13px; color:rgba(216,212,203,0.5);">© 2026 — All rights reserved<br>Made in Algeria — صنع في الجزائر</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---------- ROUTER ----------
+  function renderPage(type) {
+    switch(type) {
+      case 'cover':         return buildCover();
+      case 'inside-cover':  return buildInsideCover();
+      case 'toc':           return buildTOC();
+      case 'intro':         return buildIntro();
+      case 'products-a':    return buildProductsA();
+      case 'products-b':    return buildProductsB();
+      case 'outro':         return buildOutro();
+      case 'back-cover':    return buildBackCover();
+      default:              return '<div class="page-content"></div>';
+    }
+  }
+
+  function renderSpread(idx) {
+    const spread = SPREADS[idx];
+    const pagePair = document.getElementById('pagePair');
+    pagePair.innerHTML = `
+      <div class="page page-left">
+        <div class="torn-edge"></div>
+        ${renderPage(spread.left)}
+        <div class="page-inner-shadow-left"></div>
+      </div>
+      <div class="page page-right">
+        <div class="torn-edge"></div>
+        ${renderPage(spread.right)}
+        <div class="page-inner-shadow-right"></div>
+      </div>
+    `;
+    document.getElementById('pageIndicator').textContent =
+      `SPREAD ${String(idx+1).padStart(2,'0')} / ${String(SPREADS.length).padStart(2,'0')}`;
+
+    document.getElementById('prevBtn').disabled = idx === 0;
+    document.getElementById('nextBtn').disabled = idx === SPREADS.length - 1;
+    if (idx === SPREADS.length - 1) {
+      document.getElementById('nextBtn').style.opacity = '0.3';
+    } else {
+      document.getElementById('nextBtn').style.opacity = '1';
+    }
+  }
+
+  // ---------- PAGE FLIP ANIMATION ----------
+  function flipPage(direction) {
+    if (isFlipping) return;
+    const targetSpread = direction === 'forward' ? currentSpread + 1 : currentSpread - 1;
+    if (targetSpread < 0 || targetSpread >= SPREADS.length) return;
+
+    isFlipping = true;
+    const book = document.getElementById('book');
+    book.classList.remove('book-opening');
+
+    // Build the flipping page element with current page on front, target on back
+    const currentSpreadData = SPREADS[currentSpread];
+    const targetSpreadData = SPREADS[targetSpread];
+
+    const flipper = document.createElement('div');
+    flipper.className = 'flipping-page ' + (direction === 'forward' ? 'flip-forward' : 'flip-backward');
+
+    if (direction === 'forward') {
+      // flipping the right page to become the next left page
+      flipper.innerHTML = `
+        <div class="flip-face flip-front page page-right">
+          <div class="torn-edge"></div>
+          ${renderPage(currentSpreadData.right)}
+          <div class="page-inner-shadow-right"></div>
+        </div>
+        <div class="flip-face flip-back page page-left">
+          <div class="torn-edge"></div>
+          ${renderPage(targetSpreadData.left)}
+          <div class="page-inner-shadow-left"></div>
+        </div>
+      `;
+    } else {
+      // flipping the left page to become the previous right page
+      flipper.innerHTML = `
+        <div class="flip-face flip-front page page-left">
+          <div class="torn-edge"></div>
+          ${renderPage(currentSpreadData.left)}
+          <div class="page-inner-shadow-left"></div>
+        </div>
+        <div class="flip-face flip-back page page-right">
+          <div class="torn-edge"></div>
+          ${renderPage(targetSpreadData.right)}
+          <div class="page-inner-shadow-right"></div>
+        </div>
+      `;
+    }
+
+    book.appendChild(flipper);
+
+    setTimeout(() => {
+      currentSpread = targetSpread;
+      renderSpread(currentSpread);
+      flipper.remove();
+      isFlipping = false;
+    }, 1100);
+  }
+
+  // ---------- CART ----------
+  function addToCart(e, id) {
+    e.preventDefault();
+    e.stopPropagation();
+    const product = PRODUCTS.find(p => p.id === id);
+    if (!product) return;
+    cart.push(product);
+    document.getElementById('cartCount').textContent = cart.length;
+
+    // visual feedback
+    const card = e.target.closest('.product-card');
+    card.style.transition = 'transform 0.2s';
+    card.style.transform = 'scale(0.96)';
+    setTimeout(() => card.style.transform = '', 200);
+
+    // brief flash
+    e.target.textContent = '✓ ajouté';
+    e.target.style.color = '#6b1414';
+    setTimeout(() => {
+      e.target.textContent = '+ ajouter';
+      e.target.style.color = '';
+    }, 1500);
+  }
+  window.addToCart = addToCart;
+
+  // ---------- INIT ----------
+  document.addEventListener('DOMContentLoaded', () => {
+    renderSpread(0);
+
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 1900);
+
+    setTimeout(() => {
+      document.getElementById('loader').remove();
+    }, 2600);
+
+    document.getElementById('nextBtn').addEventListener('click', () => flipPage('forward'));
+    document.getElementById('prevBtn').addEventListener('click', () => flipPage('backward'));
+
+    // keyboard nav
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') flipPage('forward');
+      if (e.key === 'ArrowLeft') flipPage('backward');
+    });
+
+    // cart click — show simple alert with totals
+    document.getElementById('cartIcon').addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert('Le panier est vide.\nاالسلة فارغة');
+        return;
+      }
+      const total = cart.reduce((s, p) => s + p.price, 0);
+      let msg = '— PANIER / السلة —\n\n';
+      cart.forEach((p, i) => {
+        msg += `${i+1}. ${p.name} — ${p.price.toLocaleString()} DA\n`;
+      });
+      msg += `\nTotal: ${total.toLocaleString()} DA\n\nCommande via WhatsApp ?`;
+      if (confirm(msg)) {
+        const text = encodeURIComponent(`Salam! Commande SKORP:\n${cart.map(p => `- ${p.name} (${p.price} DA)`).join('\n')}\nTotal: ${total} DA`);
+        window.open(`https://wa.me/213000000000?text=${text}`, '_blank');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
